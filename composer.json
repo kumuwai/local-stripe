@@ -1,0 +1,28 @@
+{
+    "name": "kumuwai/local-stripe",
+    "description": "Store and analyze your Stripe data locally",
+    "homepage": "https://github.com/kumuwai/local-stripe",
+    "keywords": [ "Stripe", "local", "download" ],
+    "authors": [
+        {
+            "name": "Joel",
+            "email": "joel@kumuwai.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "stripe/stripe-php": "~2.1",
+        "illuminate/support": ">=4.1",
+        "illuminate/filesystem": ">=4.1",
+        "illuminate/database": ">=4.1"
+    },
+    "require-dev": {
+        "mockery/mockery": "~0.9.3",
+        "satooshi/php-coveralls": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "Kumuwai\\LocalStripe\\": "src/"
+        }
+    }
+}
