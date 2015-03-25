@@ -1,3 +1,10 @@
+v0.0.4 (3/25/2015)
+------------------
+* Include Parameter Parser
+* Remove /public from code-coverage reports (it is just used for testing)
+* Include gulp and gulp-phpunit for automatic (in-progress) testing
+
+
 v0.0.3 (3/24/2015)
 ------------------
 * Fix functional test

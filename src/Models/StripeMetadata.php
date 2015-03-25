@@ -10,7 +10,7 @@ class StripeMetadata extends Eloquent
     public $timestamps = false;
 
 
-    public static function create($attributes = [])
+    public static function create(array $attributes)
     {
         $params = array_merge($attributes,['id'=>'meta_'.uniqid()]);
 

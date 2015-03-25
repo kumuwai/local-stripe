@@ -1,16 +1,8 @@
 <?php namespace Kumuwai\LocalStripe;
 
-use Mockery;
-use Kumuwai\MockObject\MockObject;
-
 
 class FetcherTest extends TestCase
 {
-    public function tearDown()
-    {
-        Mockery::close();
-    }
-
     public function testExists() 
     {
         $test = new Fetcher;
@@ -86,35 +78,5 @@ class FetcherTest extends TestCase
     }
 
 
-    // Return all objects from a connector
-    private function setupMockConnector()
-    {
-        $this->connector = Mockery::mock('Kumuwai\LocalStripe\Connector');
-        foreach(['customer','card','charge','metadata','balance_transaction'] as $model) {
-            $stripe_name = 'stripe_' . $model;
-            $local_name = 'local_' . $model;
-            $this->$stripe_name = Mockery::mock($stripe_name.'_mock');
-            $this->$local_name = Mockery::mock($local_name.'_mock');
-            $this->connector->shouldReceive('remote')->byDefault()
-                ->with($model)->andReturn($this->$stripe_name);
-            $this->connector->shouldReceive('local')->byDefault()
-                ->with($model)->andReturn($this->$local_name);
-        }
-    }
-
-    private function setupMockStripeCollection($type, $has_more, $items)
-    {
-        $instances = [];
-        foreach ($items as $item) {
-            $method = "getFake{$type}FromStripe";
-            $instances[] = $this->$method($item);
-        }
-
-        $collection = Mockery::mock('MockStripeCollection');
-        $collection->has_more = $has_more;
-        $collection->data = $instances;
-
-        return $collection;
-    }
 
 }

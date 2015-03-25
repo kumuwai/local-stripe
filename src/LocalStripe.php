@@ -2,7 +2,7 @@
 
 
 class LocalStripe
-{    
+{
     private $connector;
     private $pusher;
     private $fetcher;

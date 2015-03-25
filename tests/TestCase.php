@@ -1,8 +1,9 @@
 <?php namespace Kumuwai\LocalStripe;
 
 use PHPUnit_Framework_TestCase;
-use Kumuwai\MockObject\MockObject;
 use Faker\Factory as Faker;
+use Kumuwai\MockObject\MockObject;
+use Mockery;
 
 
 class TestCase extends PHPUnit_Framework_TestCase
@@ -15,6 +16,11 @@ class TestCase extends PHPUnit_Framework_TestCase
         parent::__construct($name, $data, $dataName);
 
         $this->faker = Faker::create();        
+    }
+
+    public function tearDown()
+    {
+        Mockery::close();
     }
 
     protected function getFakeCustomerToStripe($options=[])
@@ -44,6 +50,24 @@ class TestCase extends PHPUnit_Framework_TestCase
         ], $options);
     }
 
+    protected function getFakeDataToPush($options = [])
+    {
+        return array_merge([
+            'source' => 'tok_xxx',
+            'email' => $this->faker->email,
+            'customer.description' => $this->faker->name,
+            'customer.metadata' => ['client_id'=>$this->faker->numberBetween(11,99)],
+            'name' => $this->faker->name,
+            'address_line1' => $this->faker->streetAddress,
+            'address_city' => $this->faker->city,
+            'address_state' => $this->faker->state,
+            'address_zip' => $this->faker->postcode,            
+            'amount' => $this->faker->numberBetween(100, 20000),
+            'currency' => 'usd',
+            'charge.description' => 'charge #' . $this->faker->numberBetween(11,99),
+            'charge.statement_descriptor' => 'Company charge #' . $this->faker->numberBetween(11,99),
+        ], $options);
+    }
 
     protected function getFakeCustomerFromStripe($options=[])
     {
@@ -93,7 +117,7 @@ class TestCase extends PHPUnit_Framework_TestCase
             'address_line1' => $this->faker->streetAddress,
             'address_city' => $this->faker->city,
             'address_state' => $this->faker->state,
-            'address_zip' => $this->faker->postcode,            
+            'address_zip' => $this->faker->postcode,
             'address_city' => '',
             'address_country' => '',
             'address_line2' => '',
@@ -154,6 +178,34 @@ class TestCase extends PHPUnit_Framework_TestCase
     protected function getEmptyModel($options = [])
     {
         return MockObject::mock('MockEmptyModel', $options);
+    }
+
+    // Setup all mock objects attached to the connector
+    // 
+    // $this->connector->local('card')  
+    //   returns a local_card_mock object ($this->local_card)
+    protected function setupMockConnector()
+    {
+        $this->connector = MockObject::mock('Kumuwai\LocalStripe\Connector');
+        foreach(['local'=>'local_','remote'=>'stripe_'] as $type=>$prefix) {
+            foreach(['customer','card','charge','metadata','balance_transaction'] as $model) {
+                $name = $prefix.$model;
+                $this->$name = MockObject::mock($name.'_mock');
+                $this->connector->shouldReceive($type)->byDefault()
+                    ->with($model)->andReturn($this->$name);
+            }
+        }
+    }
+
+    protected function setupMockStripeCollection($type, $has_more, $items)
+    {
+        $data = [];
+        foreach ($items as $item) {
+            $method = "getFake{$type}FromStripe";
+            $data[] = $this->$method($item);
+        }
+
+        return MockObject::mock('MockStripeCollection', compact('has_more','data'));
     }
 
     protected $sample_cards = [

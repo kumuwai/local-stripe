@@ -31,7 +31,7 @@ class Fetcher
         return $this->fetchStripeRecords('charge', $params);
     }
 
-    private function fetchStripeRecords($type, array $params, \Closure $closure = Null)
+    private function fetchStripeRecords($type, array $params, Closure $closure = Null)
     {
         $records = new Collection;
         do {

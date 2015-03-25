@@ -17,6 +17,7 @@
     </testsuites>
     <groups>
         <exclude>
+            <directory suffix=".php">./public/</directory>
             <group>functional</group>
         </exclude>
     </groups>

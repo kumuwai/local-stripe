@@ -5,3 +5,5 @@
 /phpunit.xml        export-ignore
 /tests              export-ignore
 /public             export-ignore
+/gulpfile.js        export-ignore
+/package.json       export-ignore

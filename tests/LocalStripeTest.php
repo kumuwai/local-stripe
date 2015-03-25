@@ -5,11 +5,6 @@ use Mockery;
 
 class LocalStripeTest extends TestCase
 {
-    public function tearDown()
-    {
-        Mockery::close();
-    }
-    
     public function testExists() 
     {
         $test = new LocalStripe;
