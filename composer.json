@@ -14,12 +14,22 @@
         "stripe/stripe-php": "~2.1",
         "illuminate/support": ">=4.1",
         "illuminate/filesystem": ">=4.1",
+        "illuminate/events": ">=4.1",
         "illuminate/database": ">=4.1"
     },
     "require-dev": {
         "mockery/mockery": "~0.9.3",
+        "vlucas/phpdotenv": "1.1.*@dev",
+        "fzaninotto/faker": "1.5.*@dev",
+        "kumuwai/mock-object": "dev-master",
         "satooshi/php-coveralls": "dev-master"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url":  "https://github.com/kumuwai/mock-object.git"
+        }
+    ],
     "autoload": {
         "psr-4": {
             "Kumuwai\\LocalStripe\\": "src/"

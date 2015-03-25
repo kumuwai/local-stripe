@@ -10,6 +10,11 @@ class PusherTest extends TestCase
         $this->test = new Pusher;
     }
 
+    public function tearDown()
+    {
+        Mockery::close();
+    }
+
     public function testExists() {}
 
 }

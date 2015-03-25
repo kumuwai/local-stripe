@@ -10,6 +10,11 @@ class ConnectorTest extends TestCase
         $this->test = new Connector;
     }
 
+    public function tearDown()
+    {
+        Mockery::close();
+    }
+
     public function testExists() {}
 
     /**

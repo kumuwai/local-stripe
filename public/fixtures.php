@@ -4,6 +4,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Capsule\Manager as Capsule;
 
+
 class TestSeeder extends Seeder 
 {
     private $capsule;
@@ -33,12 +34,12 @@ class TestSeeder extends Seeder
             ->insert(['id'=>'cust_2']);
 
         $this->capsule->table('stripe_cards')
-            ->insert(['id'=>'card_1','address_id'=>'addr_1','customer_id'=>'cust_1']);
+            ->insert(['id'=>'card_1','customer_id'=>'cust_1']);
         $this->capsule->table('stripe_cards')
             ->insert(['id'=>'card_2']);
 
         $this->capsule->table('stripe_addresses')
-            ->insert(['id'=>'addr_1']);
+            ->insert(['id'=>'addr_1','stripe_id'=>'card_1']);
         $this->capsule->table('stripe_addresses')
             ->insert(['id'=>'addr_2']);
 

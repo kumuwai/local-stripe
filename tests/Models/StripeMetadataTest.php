@@ -1,6 +1,7 @@
 <?php namespace Kumuwai\LocalStripe\Models;
 
 use Kumuwai\LocalStripe\TestCase;
+use Mockery;
 
 
 class StripeMetadataTest extends TestCase
@@ -9,6 +10,12 @@ class StripeMetadataTest extends TestCase
     public function setUp()
     {
         $this->test = new StripeMetadata;
+        $this->test->getConnection()->beginTransaction();
+    }
+
+    public function tearDown()
+    {
+        $this->test->getConnection()->rollBack();
     }
 
     public function testClassExists() {}
@@ -32,6 +39,12 @@ class StripeMetadataTest extends TestCase
         $test = $this->test->find('meta_4');
         $this->assertNotNull($test->charge);
         $this->assertEquals('ch_1', $test->charge->id);
+    }
+
+    public function testCanCreate()
+    {
+        $test = $this->test->create(['stripe_id'=>'a_1','key'=>'foo','value'=>'bar']);
+        $this->assertEquals('a_1', $test->stripe_id);
     }
 
 }

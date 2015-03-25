@@ -5,7 +5,11 @@ use Mockery;
 
 class LocalStripeTest extends TestCase
 {
-
+    public function tearDown()
+    {
+        Mockery::close();
+    }
+    
     public function testExists() 
     {
         $test = new LocalStripe;
@@ -79,5 +83,17 @@ class LocalStripeTest extends TestCase
         $this->assertEquals(['x'=>'y'], $result);
     }
 
+    public function testGiveDirectAccessToComponents()
+    {
+        $connector = Mockery::mock('Kumuwai\LocalStripe\Connector');
+        $pusher = Mockery::mock('Kumuwai\LocalStripe\Pusher');
+        $fetcher = Mockery::mock('Kumuwai\LocalStripe\Fetcher');
+
+        $test = new LocalStripe($connector, $pusher, $fetcher);
+
+        $this->assertInstanceOf('Kumuwai\LocalStripe\Connector', $test->getConnector());
+        $this->assertInstanceOf('Kumuwai\LocalStripe\Pusher', $test->getPusher());
+        $this->assertInstanceOf('Kumuwai\LocalStripe\Fetcher', $test->getFetcher());
+    }
 }
 

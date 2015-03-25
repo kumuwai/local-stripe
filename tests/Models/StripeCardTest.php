@@ -9,6 +9,12 @@ class StripeCardTest extends TestCase
     public function setUp()
     {
         $this->test = new StripeCard;
+        $this->test->getConnection()->beginTransaction();
+    }
+
+    public function tearDown()
+    {
+        $this->test->getConnection()->rollBack();
     }
 
     public function testClassExists() {}
@@ -35,6 +41,26 @@ class StripeCardTest extends TestCase
     {
         $test = $this->test->find('card_1');
         $this->assertNotNull($test->metadata);
+    }
+
+    public function testDontCreateDuplicateObject()
+    {
+        $card = $this->getFakeCardFromStripe(['id'=>'card_1']);
+
+        $test = $this->test->createFromStripe($card);
+
+        $this->assertNotNull($test);
+        $this->assertEquals('card_1', $test->id);
+    }
+
+    public function testCanCreateFromStripeObject()
+    {
+        $card = $this->getFakeCardFromStripe(['id'=>'card_394']);
+
+        $test = $this->test->createFromStripe($card);
+
+        $this->assertNotNull($test);
+        $this->assertEquals('card_394', $test->id);
     }
 
 }

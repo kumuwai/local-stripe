@@ -48,6 +48,20 @@ class LocalStripe
         return $this->pusher->charge($params);
     }
 
+    public function getConnector()
+    {
+        return $this->connector;
+    }
+    
+    public function getPusher()
+    {
+        return $this->pusher;
+    }
+
+    public function getFetcher()
+    {
+        return $this->fetcher;
+    }
 
 }
 
