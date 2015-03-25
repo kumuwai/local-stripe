@@ -16,7 +16,7 @@ class StripeCustomer extends Eloquent
         if ($found = self::find($stripe->id))
             return $found;
 
-        $new = self::create([
+        self::create([
             'id' => $stripe->id,
             'livemode' => ($stripe->livemode == 'true'),
             'description' => $stripe->description,
@@ -31,7 +31,7 @@ class StripeCustomer extends Eloquent
         foreach($stripe->sources->data as $source)
             StripeCard::createFromStripe($source);
 
-        return self::find($stripe->id);
+        return self::findOrFail($stripe->id);
     }
 
     /**

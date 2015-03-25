@@ -14,7 +14,7 @@ class StripeBalanceTransaction extends Eloquent
         if ($found = self::find($stripe->id))
             return $found;
 
-        $new = self::create([
+        self::create([
             'id' => $stripe->id,
             'amount' => $stripe->amount,
             'currency' => $stripe->currency,
@@ -24,7 +24,7 @@ class StripeBalanceTransaction extends Eloquent
             'created_at' => $stripe->created,
         ]);
 
-        return self::find($stripe->id);
+        return self::findOrFail($stripe->id);
     }
 
     public function charge()

@@ -1,7 +1,7 @@
 <?php namespace Kumuwai\LocalStripe;
 
-use Faker\Factory as Faker;
 use Illuminate\Support\Arr;
+use Dotenv;
 
 
 /**
@@ -15,6 +15,7 @@ class FunctionalTest extends TestCase
 {
     private $stripe;
     private $connector;
+
 
     public function testSubmitAndReadStripeData()
     {
@@ -34,6 +35,8 @@ class FunctionalTest extends TestCase
 
     private function setupLocalStripe()
     {
+        Dotenv::load(__DIR__.'/../../');
+
         $this->connector = new Connector;
         $pusher = new Pusher($this->connector);
         $fetcher = new Fetcher($this->connector);
@@ -54,11 +57,11 @@ class FunctionalTest extends TestCase
     private function directlySubmitCustomersWithChargesToStripe($customers)
     {
         foreach($customers as $customer) {
-            $data = Arr::except($customer->toArray(), ['sources','charges']);
+            $data = Arr::except($customer, ['source','charge']);
             $new = $this->connector->remote('customer')->create($data);
-            $new->sources->create(['source' => $customer['sources']->toArray()]);
-            $customer['charges']['customer'] = $new->id;
-            $this->connector->remote('charge')->create($customer['charges']->toArray());
+            $new->sources->create(['source' => $customer['source']]);
+            $customer['charge']['customer'] = $new->id;
+            $this->connector->remote('charge')->create($customer['charge']);
         }
     }
 

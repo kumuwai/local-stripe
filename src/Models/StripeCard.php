@@ -15,7 +15,7 @@ class StripeCard extends Eloquent
         if ($found = self::find($stripe->id))
             return $found;
 
-        $new = self::create([
+        self::create([
             'id' => $stripe->id,
             'brand' => $stripe->brand,
             'exp_month' => $stripe->exp_month,
@@ -30,10 +30,9 @@ class StripeCard extends Eloquent
             'name' => $stripe->name,
         ]);
 
-        $found = self::find($stripe->id);
         StripeAddress::createFromStripe($stripe);
 
-        return $found;
+        return self::findOrFail($stripe->id);
     }
 
     public function customer()

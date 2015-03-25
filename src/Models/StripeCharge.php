@@ -15,7 +15,7 @@ class StripeCharge extends Eloquent
         if ($found = self::find($stripe->id))
             return $found;
 
-        $new = self::create([
+        self::create([
             'id' => $stripe->id,
             'card_id' => $stripe->source->id,
             'customer_id' => $stripe->source->customer,
@@ -35,12 +35,10 @@ class StripeCharge extends Eloquent
             'created_at' => $stripe->created,
         ]);
 
-        $found = self::find($stripe->id);
-
         foreach($stripe->metadata->__toArray() as $key=>$value)
             StripeMetadata::create(['stripe_id'=>$stripe->id, 'key'=>$key, 'value'=>$value]);
 
-        return $found;
+        return self::findOrFail($stripe->id);
     }
 
     public function card()

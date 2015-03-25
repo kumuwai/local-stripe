@@ -23,8 +23,8 @@ class TestCase extends PHPUnit_Framework_TestCase
             'email' => $this->faker->email,
             'description' => $this->faker->sentence,
             'metadata' => ['name' => $this->faker->name],
-            'sources' => [$this->getFakeCardToStripe()],
-            'charges' => [$this->getFakeChargeToStripe()],
+            'source' => $this->getFakeCardToStripe(),
+            'charge' => $this->getFakeChargeToStripe(),
         ];
     }
 

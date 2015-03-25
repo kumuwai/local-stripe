@@ -8,6 +8,7 @@
 
 <?php
 require_once dirname(__DIR__) . '/public/bootstrap.php';
+Dotenv::load(__DIR__.'/../');
 
 use Kumuwai\LocalStripe\Connector;
 use Kumuwai\LocalStripe\Fetcher;

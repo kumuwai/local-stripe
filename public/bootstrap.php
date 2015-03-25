@@ -5,7 +5,6 @@ if (!is_file(dirname(__DIR__) . '/vendor/autoload.php')) {
 }
 
 require dirname(__DIR__) . '/vendor/autoload.php';
-Dotenv::load(__DIR__.'/../');
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Events\Dispatcher;
