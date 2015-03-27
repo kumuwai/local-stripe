@@ -3,7 +3,6 @@
 use PHPUnit_Framework_TestCase;
 use Faker\Factory as Faker;
 use Kumuwai\MockObject\MockObject;
-use Mockery;
 
 
 class TestCase extends PHPUnit_Framework_TestCase
@@ -20,25 +19,23 @@ class TestCase extends PHPUnit_Framework_TestCase
 
     public function tearDown()
     {
-        Mockery::close();
+        MockObject::close();
     }
 
     protected function getFakeCustomerToStripe($options=[])
     {
-        return [
+        return array_merge([
             'email' => $this->faker->email,
             'description' => $this->faker->sentence,
             'metadata' => ['name' => $this->faker->name],
-            'source' => $this->getFakeCardToStripe(),
-            'charge' => $this->getFakeChargeToStripe(),
-        ];
+        ], $options);
     }
 
-    protected function getFakeCardToStripe()
+    protected function getFakeCardToStripe($options = [])
     {
-        $card = $this->getFakeCardData();
-        $card['number'] = $this->faker->randomElement($this->sample_cards);
-        return $card;
+        return ['source' => $this->getFakeCardData(array_merge([
+            'number' => $this->faker->randomElement($this->sample_cards)
+        ], $options))];
     }
 
     protected function getFakeChargeToStripe($options = [])
@@ -84,11 +81,11 @@ class TestCase extends PHPUnit_Framework_TestCase
         ], $options));
     }
 
-    protected function getFakeSourcesFromStripe($options=[])
+    protected function getFakeSourcesFromStripe($cardOptions=[], $sourceOptions=[])
     {
-        return MockObject::mock('MockSources',
-            ['data'=>[$this->getFakeCardFromStripe($options)]]
-        );
+        return MockObject::mock('MockSources', array_merge([
+            'data'=>[$this->getFakeCardFromStripe($cardOptions)],
+        ], $sourceOptions));
     }
 
     protected function getFakeCardFromStripe($options = [])
@@ -108,9 +105,9 @@ class TestCase extends PHPUnit_Framework_TestCase
         ], $options));
     }
 
-    protected function getFakeCardData()
+    protected function getFakeCardData($options = [])
     {
-        return [
+        return array_merge([
             'object' => 'card',
             'exp_month' => $this->faker->numberBetween(1,12),
             'exp_year' => $this->faker->numberBetween(1,5) + date('Y'),
@@ -122,12 +119,12 @@ class TestCase extends PHPUnit_Framework_TestCase
             'address_country' => '',
             'address_line2' => '',
             'country' => '',
-        ];
+        ], $options);
     }
 
     protected function getFakeChargeFromStripe($options = [])
     {
-        $charge = MockObject::mock('MockCharge', [
+        return MockObject::mock('MockCharge', array_merge([
             'id' => 'ch_' . $this->faker->numberBetween(11,99),
             'source' => MockObject::mock('MockCardSource', [
                 'id' => 'card_' . $this->faker->numberBetween(11,99),
@@ -149,17 +146,12 @@ class TestCase extends PHPUnit_Framework_TestCase
             'created' => Null,
             'metadata' => $this->getFakeMetadataFromStripe(),
             'balance_transaction' => $this->getFakeBalanceTransactionFromStripe(),
-        ]);
-
-        foreach($options as $key=>$value)
-            $charge->$key = $value;
-
-        return $charge;
+        ], $options));
     }
 
     protected function getFakeBalanceTransactionFromStripe($options = [])
     {
-        return MockObject::mock('MockBalanceTransaction', [
+        return MockObject::mock('MockBalanceTransaction', array_merge([
             'id' => 'tx_'.$this->faker->numberBetween(11,99),
             'amount' => $this->faker->numberBetween(100,9900),
             'currency' => 'usd',
@@ -167,12 +159,12 @@ class TestCase extends PHPUnit_Framework_TestCase
             'fee' => $this->faker->numberBetween(10,990),
             'source' => 'ch_'.$this->faker->numberBetween(11,99),
             'created' => $this->faker->datetime(),
-        ]);
+        ], $options));
     }
 
-    protected function getFakeMetadataFromStripe($values = [])
+    protected function getFakeMetadataFromStripe($options = [])
     {
-        return MockObject::mock('MockMetadata', ['__toArray' => $values]);
+        return MockObject::mock('MockMetadata', ['__toArray' => $options]);
     }
 
     protected function getEmptyModel($options = [])
@@ -180,10 +172,12 @@ class TestCase extends PHPUnit_Framework_TestCase
         return MockObject::mock('MockEmptyModel', $options);
     }
 
-    // Setup all mock objects attached to the connector
-    // 
-    // $this->connector->local('card')  
-    //   returns a local_card_mock object ($this->local_card)
+    /**
+     * Setup all mock objects attached to the connector
+     *
+     *   $this->connector->local('card')  
+     *      returns a local_card_mock object (eg, $this->local_card) 
+     */
     protected function setupMockConnector()
     {
         $this->connector = MockObject::mock('Kumuwai\LocalStripe\Connector');

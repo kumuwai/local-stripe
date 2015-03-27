@@ -16,9 +16,25 @@ class ParameterParser
     {
         $flattened = $this->helper->dot($items);
         $filtered = $this->helper->only($flattened, $this->validElements[$type]);
+        $filtered = $this->includeCardSource($type, $filtered);
         $full = array_merge($filtered, $this->getMetadata($type, $flattened));
 
         return $this->expand($full);
+    }
+
+    private function includeCardSource($type, $original)
+    {
+        if ($type <> 'card')
+            return $original;
+
+        $return = [];
+        foreach($original as $key => $value)
+            if (strpos($key, 'source') === 0)
+                $return[$key] = $value;
+            else
+                $return['source.'.$key] = $value;
+
+        return $return;
     }
 
     private function getMetadata($type, $original)
@@ -78,6 +94,18 @@ class ParameterParser
             'source.address_zip',
             'source.address_state',
             'source.address_country',
+            'object',
+            'number',
+            'exp_month',
+            'exp_year',
+            'cvc',
+            'name',
+            'address_line1',
+            'address_line2',
+            'address_city',
+            'address_zip',
+            'address_state',
+            'address_country',
         ],
         'charge' => [
             'amount',

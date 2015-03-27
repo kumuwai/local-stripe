@@ -28,14 +28,30 @@ class FetcherTest extends TestCase
         $c1 = $this->setupMockStripeCollection('Customer', true, [['id'=>'cust_1'],['id'=>'cust_2']]);
         $c2 = $this->setupMockStripeCollection('Customer', false, [['id'=>'cust_3']]);
         $this->stripe_customer->shouldReceive('all')->times(2)->andReturn($c1,$c2);
-        $this->local_customer->shouldReceive('createFromStripe')->times(3)->andReturn('x');
+        $this->local_customer->shouldReceive('createFromStripe')->times(3)->andReturn('x','y','z');
 
         $test = new Fetcher($this->connector);
         $result = $test->loadCustomerRecords();
 
         $this->assertNotNull($result);
-        $this->assertCount(3, $result);        
+        $this->assertCount(3, $result);
+        $this->assertEquals(['x','y','z'], $result);
     }
+
+    public function testShouldFetchChargeRecords()
+    {
+        $this->setupMockConnector();
+        $c1 = $this->setupMockStripeCollection('Charge', true, [['id'=>'ch_1'],['id'=>'ch_2']]);
+        $c2 = $this->setupMockStripeCollection('Charge', false, [['id'=>'ch_3']]);
+        $this->stripe_charge->shouldReceive('all')->times(2)->andReturn($c1,$c2);
+
+        $test = new Fetcher($this->connector);
+        $result = $test->fetchChargeRecords();
+
+        $this->assertNotNull($result);
+        $this->assertCount(3, $result);
+    }
+
 
     public function testShouldLoadChargeRecords()
     {

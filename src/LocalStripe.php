@@ -38,8 +38,9 @@ class LocalStripe
     public function chargeCustomer(array $params = [])
     {
         $customer = $this->pusher->createCustomer($params);
+
         return $this->pusher->charge(
-            array_merge(['source'=>$customer->id],$params)
+            array_merge(['customer'=>$customer->id],$params)
         );
     }
 

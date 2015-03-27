@@ -1,6 +1,6 @@
 <?php namespace Kumuwai\LocalStripe;
 
-use Mockery;
+use Kumuwai\MockObject\MockObject;
 
 
 class LocalStripeTest extends TestCase
@@ -12,7 +12,7 @@ class LocalStripeTest extends TestCase
 
     public function testCanGetRemoteStripeObjects()
     {
-        $connector = Mockery::mock('Kumuwai\LocalStripe\Connector');
+        $connector = MockObject::mock('Kumuwai\LocalStripe\Connector');
         $connector->shouldReceive('remote')->once()->with('customer')->andReturn('x');
         $test = new LocalStripe($connector);
 
@@ -21,7 +21,7 @@ class LocalStripeTest extends TestCase
 
     public function testCanGetLocalStripeObjects()
     {
-        $connector = Mockery::mock('Kumuwai\LocalStripe\Connector');
+        $connector = MockObject::mock('Kumuwai\LocalStripe\Connector');
         $connector->shouldReceive('local')->once()->with('customer')->andReturn('x');
         $test = new LocalStripe($connector);
 
@@ -30,7 +30,7 @@ class LocalStripeTest extends TestCase
 
     public function testCanFetchRecordsFromStripeServer()
     {
-        $fetcher = Mockery::mock('Kumuwai\LocalStripe\Fetcher');
+        $fetcher = MockObject::mock('Kumuwai\LocalStripe\Fetcher');
         $fetcher->shouldReceive('fetch')->once()->with(['foo'=>'bar'])->andReturn(['x'=>'y']);
         $test = new LocalStripe(Null, Null, $fetcher);
 
@@ -40,7 +40,7 @@ class LocalStripeTest extends TestCase
 
     public function testCanPushChargeToStripeServer()
     {
-        $pusher = Mockery::mock('Kumuwai\LocalStripe\Pusher');
+        $pusher = MockObject::mock('Kumuwai\LocalStripe\Pusher');
         $pusher->shouldReceive('charge')->once()->with(['foo'=>'bar'])->andReturn(['x'=>'y']);
 
         $test = new LocalStripe(Null, $pusher, Null);
@@ -51,10 +51,10 @@ class LocalStripeTest extends TestCase
 
     public function testCanCreateCustomer()
     {
-        $customer = Mockery::mock('MockCustomer');
+        $customer = MockObject::mock('MockCustomer');
         $customer->id = 'cust_1';
 
-        $pusher = Mockery::mock('Kumuwai\LocalStripe\Pusher');
+        $pusher = MockObject::mock('Kumuwai\LocalStripe\Pusher');
         $pusher->shouldReceive('createCustomer')->once()->with(['foo'=>'bar'])->andReturn($customer);
 
         $test = new LocalStripe(Null, $pusher, Null);
@@ -65,12 +65,13 @@ class LocalStripeTest extends TestCase
 
     public function testCanCreateCustomerWithCharge()
     {
-        $customer = Mockery::mock('MockCustomer');
-        $customer->id = 'cust_1';
+        $customer = MockObject::mock('MockCustomer', ['cards', 'id'=>'cust_1']);
 
-        $pusher = Mockery::mock('Kumuwai\LocalStripe\Pusher');
-        $pusher->shouldReceive('createCustomer')->once()->with(['foo'=>'bar'])->andReturn($customer);
-        $pusher->shouldReceive('charge')->once()->with(['source'=>'cust_1','foo'=>'bar'])->andReturn(['x'=>'y']);
+        $pusher = MockObject::mock('Kumuwai\LocalStripe\Pusher');
+        $pusher->shouldReceive('createCustomer')->once()
+            ->with(['foo'=>'bar'])->andReturn($customer);
+        $pusher->shouldReceive('charge')->once()
+            ->with(['customer'=>'cust_1','foo'=>'bar'])->andReturn(['x'=>'y']);
 
         $test = new LocalStripe(Null, $pusher, Null);
         $result = $test->chargeCustomer(['foo'=>'bar']);
@@ -80,9 +81,9 @@ class LocalStripeTest extends TestCase
 
     public function testGiveDirectAccessToComponents()
     {
-        $connector = Mockery::mock('Kumuwai\LocalStripe\Connector');
-        $pusher = Mockery::mock('Kumuwai\LocalStripe\Pusher');
-        $fetcher = Mockery::mock('Kumuwai\LocalStripe\Fetcher');
+        $connector = MockObject::mock('Kumuwai\LocalStripe\Connector');
+        $pusher = MockObject::mock('Kumuwai\LocalStripe\Pusher');
+        $fetcher = MockObject::mock('Kumuwai\LocalStripe\Fetcher');
 
         $test = new LocalStripe($connector, $pusher, $fetcher);
 

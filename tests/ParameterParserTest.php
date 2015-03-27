@@ -42,6 +42,9 @@ class ParameterParserTest extends TestCase
             ['customer',['metadata.foo'=>'bar'],['metadata'=>['foo'=>'bar']]],
             // Object-specific metadata
             ['customer',['customer.metadata.foo'=>'bar'],['metadata'=>['foo'=>'bar']]],
+            // Card data without source
+            ['card',['object'=>'x'],['source'=>['object'=>'x']]],
+
 
             // Check all documented values  -----------------------------------
             ['card',['source'=>'x'],['source'=>'x']],
@@ -57,10 +60,21 @@ class ParameterParserTest extends TestCase
             ['card',['source.address_zip'=>'x'],['source'=>['address_zip'=>'x']]],
             ['card',['source.address_state'=>'x'],['source'=>['address_state'=>'x']]],
             ['card',['source.address_country'=>'x'],['source'=>['address_country'=>'x']]],
+            ['card',['object'=>'x'],['source'=>['object'=>'x']]],
+            ['card',['number'=>'x'],['source'=>['number'=>'x']]],
+            ['card',['exp_month'=>'x'],['source'=>['exp_month'=>'x']]],
+            ['card',['exp_year'=>'x'],['source'=>['exp_year'=>'x']]],
+            ['card',['cvc'=>'x'],['source'=>['cvc'=>'x']]],
+            ['card',['name'=>'x'],['source'=>['name'=>'x']]],
+            ['card',['address_line1'=>'x'],['source'=>['address_line1'=>'x']]],
+            ['card',['address_line2'=>'x'],['source'=>['address_line2'=>'x']]],
+            ['card',['address_city'=>'x'],['source'=>['address_city'=>'x']]],
+            ['card',['address_zip'=>'x'],['source'=>['address_zip'=>'x']]],
+            ['card',['address_state'=>'x'],['source'=>['address_state'=>'x']]],
+            ['card',['address_country'=>'x'],['source'=>['address_country'=>'x']]],
             ['charge',['amount'=>'x'],['amount'=>'x']],
             ['charge',['currency'=>'x'],['currency'=>'x']],
             ['charge',['customer'=>'x'],['customer'=>'x']],
-            ['charge',['source'=>'x'],['source'=>'x']],
             ['charge',['description'=>'x'],['description'=>'x']],
             ['charge',['capture'=>'x'],['capture'=>'x']],
             ['charge',['statement_descriptor'=>'x'],['statement_descriptor'=>'x']],

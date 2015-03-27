@@ -17,8 +17,17 @@
     </testsuites>
     <groups>
         <exclude>
-            <directory suffix=".php">./public/</directory>
             <group>functional</group>
         </exclude>
     </groups>
+
+    <filter>
+      <whitelist processUncoveredFilesFromWhitelist="true">
+        <directory suffix=".php">./src/</directory>
+        <exclude>
+          <directory suffix=".php">./src/database/</directory>
+        </exclude>
+      </whitelist>
+    </filter>
+
 </phpunit>

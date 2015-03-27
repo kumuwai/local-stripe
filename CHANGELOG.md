@@ -1,3 +1,10 @@
+v0.0.5 (3/26/2015)
+------------------
+* Include pusher (submit data to Stripe)
+* Just use the /src folder for code-coverage reports
+* Include a Laravel service provider
+
+
 v0.0.4 (3/25/2015)
 ------------------
 * Include Parameter Parser
