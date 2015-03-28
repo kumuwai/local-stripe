@@ -11,7 +11,7 @@ class LocalStripeServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            realpath(__DIR__.'/src/database/migrations') => $this->app->databasePath().'/migrations',
+            __DIR__.'/database/migrations' => $this->app->databasePath('/migrations'),
         ]);
     }
 
