@@ -1,0 +1,27 @@
+# Dependencies
+markdown:         redcarpet
+highlighter:      pygments
+
+# Permalinks
+permalink:        pretty
+relative_permalinks: true
+
+# Setup
+title:            LocalStripe
+tagline:          'Keep a local copy of your Stripe data'
+description:      'Download and store your Stripe data for analysis and use in your projects'
+url:              http://kumuwai.github.io/local-stripe
+baseurl:          /local-stripe/
+badges:           '<a href="https://travis-ci.org/kumuwai/local-stripe"><img src="https://img.shields.io/travis/kumuwai/local-stripe/master.svg"></a> <a href="https://coveralls.io/r/kumuwai/local-stripe"><img src="https://coveralls.io/repos/kumuwai/local-stripe/badge.svg"></a> <a href="https://scrutinizer-ci.com/g/kumuwai/local-stripe"><img src="https://img.shields.io/scrutinizer/g/kumuwai/local-stripe.svg"></a> <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg"></a>'
+
+author:
+  name:           'Joel Hatch'
+  url:            https://github.com/kumuwai
+
+paginate:         5
+
+# Custom vars
+version:          0.0.1
+
+github:
+  repo:           https://github.com/kumuwai/local-stripe
