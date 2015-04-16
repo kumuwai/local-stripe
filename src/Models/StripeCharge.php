@@ -38,6 +38,8 @@ class StripeCharge extends Eloquent
         foreach($stripe->metadata->__toArray() as $key=>$value)
             StripeMetadata::create(['stripe_id'=>$stripe->id, 'key'=>$key, 'value'=>$value]);
 
+        StripeCard::createFromStripe($stripe->source);
+
         return self::findOrFail($stripe->id);
     }
 

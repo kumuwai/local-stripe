@@ -73,8 +73,10 @@ class Fetcher
 
     private function writeChargeData($charge)
     {
-        $transaction = $this->connector->remote('balance_transaction')->retrieve($charge->balance_transaction);
-        $this->connector->local('balance_transaction')->createFromStripe($transaction);
+        if ($charge->balance_transaction) {
+            $transaction = $this->connector->remote('balance_transaction')->retrieve($charge->balance_transaction);
+            $this->connector->local('balance_transaction')->createFromStripe($transaction);
+        }
         
         return $this->connector->local('charge')->createFromStripe($charge);
     }
