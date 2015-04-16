@@ -1,4 +1,4 @@
-<?php namespace Kumuwai\LocalStripe;
+<?php namespace Kumuwai\LocalStripe\Laravel;
 
 use Illuminate\Support\Facades\Facade;
 

@@ -22,24 +22,51 @@ This is not yet available as a package on packagist, so if you'd like to install
         }
     ],
 
-You will also need to register the service provider in app/config/app.php:
+You will also need to register a service provider in app/config/app.php. There are service providers for Laravel 4 and Laravel 5:
 
-    'Kumuwai\LocalStripe\LocalStripeServiceProvider',
+    'Kumuwai\LocalStripe\Laravel4ServiceProvider',
 
 The service provider does not automatically include an alias to the facade. If you would like to use the facade, add an alias to it:
 
     'LocalStripe'  => 'Kumuwai\LocalStripe\LocalStripeFacade',
+
+By default, LocalStripe will load your Stripe keys from these environment variables:
+
+    STRIPE_SECRET - your secret key
+    STRIPE_PUBLIC - your published key
+
+In Laravel 4, you can publish the configuration and migrations with:
+
+    php artisan migrate:publish kumuwai/local-stripe
+    php artisan config:publish kumuwai/local-stripe
+
+To make sure that things are working correctly, you can try to use one of the test cards:
+
+    try {   
+        LocalStripe::charge([
+            'amount' => 1000,
+            'currency' => 'USD',
+            'source' => [
+                'number' => '4000000000000002',
+                'exp_month' => '10',
+                'exp_year' => '2018',
+            ],
+        ]);
+    } catch (Stripe\Error\Card $exception) {
+        dd($exception);
+        dd($exception->getMessage());
+        dd($exception->getJsonBody());
+    }
 
 
 Usage
 ------
 
 ```php
-$stripe = new LocalStripe;
-$stripe->fetch($params);            // Fetch records from the Stripe server; return local objects
-$stripe->charge($params);           // Make a simple charge (no customer object, or already-created customer)
-$stripe->chargeCustomer($params);   // Charge a customer
-$stripe->create($params);           // Create a customer record. Do not charge them at this time.
+LocalStripe::fetch($params);            // Fetch records from the Stripe server; return local objects
+LocalStripe::charge($params);           // Make a simple charge (no customer object, or already-created customer)
+LocalStripe::chargeCustomer($params);   // Charge a customer
+LocalStripe::create($params);           // Create a customer record. Do not charge them at this time.
 ```
 
 $params is an associative array that can include any Stripe parameter. The parameter will be entered into any object in which it is applicable. To limit that to a specific object, you can use dot notation. 
