@@ -1,7 +1,7 @@
 <?php
 
 if (!is_file(dirname(__DIR__) . '/vendor/autoload.php')) {
-    throw new RuntimeException('Install dependencies to run test suite.');
+    throw new RuntimeException('To run the test suite, please install dependencies (eg, composer install)');
 }
 
 require dirname(__DIR__) . '/vendor/autoload.php';
@@ -33,6 +33,6 @@ $migrator = new Migrator($repo, $resolver, new Filesystem);
 $schema = new SchemaBuilder($capsule->getConnection());
 
 $repo->createRepository();
-$migrator->run(__DIR__.'/../src/database/migrations');
+$migrator->run(__DIR__.'/../src/migrations');
 
 
