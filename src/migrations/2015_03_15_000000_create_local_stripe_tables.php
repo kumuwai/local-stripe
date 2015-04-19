@@ -11,7 +11,17 @@ class CreateLocalStripeTables extends Migration
     
     public function __construct()
     {
-        $this->schema = Capsule::schema();
+        if ($this->isLaravelProject())
+            $this->schema = app('db')->connection()->getSchemaBuilder();
+        else
+            $this->schema = Capsule::schema();
+    }
+
+    private function isLaravelProject()
+    {
+        return is_callable('app') 
+            && is_callable([app('db'), 'connection']) 
+            && is_callable([app('db')->connection(), 'getSchemaBuilder']);
     }
 
     /**

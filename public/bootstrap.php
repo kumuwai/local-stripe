@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * This is an example of how to bootstrap a project without the Laravel framework.
+ * It sets up the autoloader and the database.
+ * 
+ * To do this, it uses several Illuminate components, with an in-memory sqlite database connection.
+ * It also runs the migrations as part of the bootstrap process.
+ */
 if (!is_file(dirname(__DIR__) . '/vendor/autoload.php')) {
     throw new RuntimeException('To run the test suite, please install dependencies (eg, composer install)');
 }
