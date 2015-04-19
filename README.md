@@ -149,3 +149,11 @@ Models:
     StripeMetadata
 
 
+
+TODO
+----
+  * Post charges to a customer source via intermediate 'stripe_pending_charges'
+    * We could still charge a customer when not connected to the internet
+    * The charge would be applied when service was reestablished
+  * Sync api 
+  
