@@ -44,7 +44,10 @@ class StripeAddressTest extends TestCase
 
     public function testCanCreateFromStripeCardObject()
     {
-        $card = $this->getFakeCardFromStripe(['id'=>'card_4']);
+        $card = $this->getFakeCardFromStripe([
+            'id'=>'card_4',
+            'address_city' => 'Foo',
+        ]);
 
         $test = $this->test->createFromStripe($card);
 
