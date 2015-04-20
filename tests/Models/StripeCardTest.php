@@ -35,6 +35,7 @@ class StripeCardTest extends TestCase
     {
         $test = $this->test->find('card_1');
         $this->assertNotNull($test->address);
+        $this->assertEquals('addr_1', $test->address->id);
     }
 
     public function testHasMetadata()

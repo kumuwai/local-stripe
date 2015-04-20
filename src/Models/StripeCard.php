@@ -42,7 +42,7 @@ class StripeCard extends Eloquent
 
     public function address()
     {
-        return $this->hasMany('Kumuwai\LocalStripe\Models\StripeAddress','stripe_id');
+        return $this->hasOne('Kumuwai\LocalStripe\Models\StripeAddress','stripe_id');
     }
 
     public function charges()
