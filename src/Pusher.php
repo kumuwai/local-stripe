@@ -19,7 +19,9 @@ class Pusher
 
         $stripeCustomer = $this->connector->remote('customer')
             ->create($customerArguments);
-        $stripeCard = $stripeCustomer->sources->create($cardArguments);
+
+        // TODO: save card data to the card object
+        // $stripeCard = $stripeCustomer->sources->retrieve($stripeCustomer->default_source);
 
         $localCustomer = $this->connector->local('customer')
             ->createFromStripe($stripeCustomer);
