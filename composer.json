@@ -32,7 +32,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Kumuwai\\LocalStripe\\": "src/"
+            "Kumuwai\\LocalStripe\\": "src/LocalStripe"
         }
     }
 }
