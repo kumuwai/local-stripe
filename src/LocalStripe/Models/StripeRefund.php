@@ -23,7 +23,7 @@ class StripeRefund extends Eloquent
             'charge_id' => $stripe->charge,
             'receipt_number' => $stripe->receipt_number,
             'reason' => $stripe->reason,
-            'description' => $stripe->description,
+            // 'description' => $stripe->description,
             'created_at' => $stripe->created,
         ]);
 
