@@ -1,7 +1,11 @@
 {
-  "devDependencies": {
-    "gulp": "^3.8.11",
-    "gulp-phpunit": "^0.8.1",
-    "gulp-plumber": "^1.0.0"
-  }
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/kumuwai/local-stripe.git"
+    },
+    "devDependencies": {
+        "gulp": "^3.8.11",
+        "gulp-phpunit": "^0.8.1",
+        "gulp-plumber": "^1.0.0"
+    }
 }

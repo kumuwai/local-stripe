@@ -32,4 +32,9 @@ class StripeBalanceTransaction extends Eloquent
         return $this->belongsTo('Kumuwai\LocalStripe\Models\StripeCharge', 'charge_id');
     }
 
+    public function refund()
+    {
+        return $this->belongsTo('Kumuwai\LocalStripe\Models\StripeRefund', 'charge_id');
+    }
+
 }

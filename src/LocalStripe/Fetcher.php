@@ -77,8 +77,22 @@ class Fetcher
             $transaction = $this->connector->remote('balance_transaction')->retrieve($charge->balance_transaction);
             $this->connector->local('balance_transaction')->createFromStripe($transaction);
         }
+
+        // TODO: Test me!
+        if ($charge->refunds) {
+            foreach($charge->refunds as $refund) {
+                $this->connector->local('refund')->createFromStripe($refund);
+            }
+        }
         
         return $this->connector->local('charge')->createFromStripe($charge);
+    }
+
+    private function writeRefundData($refund)
+    {
+        $refund = $this->connector->remote('balance_transaction')->retrieve($charge->balance_transaction);
+        $this->connector->local('balance_transaction')->createFromStripe($transaction);            
+
     }
 
 }

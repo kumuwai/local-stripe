@@ -25,6 +25,12 @@ class StripeBalanceTransactionTest extends TestCase
         $this->assertNotNull($test->charge);
     }
 
+    public function testHasRefund()
+    { 
+        $test = $this->test->find('tr_3');
+        $this->assertNotNull($test->refund);
+    }
+
     public function testAttemptToCreateDuplicateObjectShouldReturnOriginal()
     {
         $tr = $this->getEmptyModel(['id'=>'tr_1']);

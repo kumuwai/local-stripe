@@ -58,6 +58,11 @@ class StripeCharge extends Eloquent
         return $this->hasOne('Kumuwai\LocalStripe\Models\StripeBalanceTransaction', 'charge_id');
     }
 
+    public function refunds()
+    {
+        return $this->hasMany('Kumuwai\LocalStripe\Models\StripeRefund', 'charge_id');
+    }
+
     public function metadata()
     {
         return $this->hasMany('Kumuwai\LocalStripe\Models\StripeMetadata', 'stripe_id');

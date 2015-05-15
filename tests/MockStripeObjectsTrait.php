@@ -36,6 +36,15 @@ trait MockStripeObjectsTrait
         ], $options);
     }
 
+    protected function getFakeRefundToStripe($options = [])
+    {
+        return array_merge([
+            'amount' => $this->faker->numberBetween(100,12000),
+            'currency' => 'usd',
+            'metadata' => ['url'=>$this->faker->url],
+        ], $options);
+    }
+
     protected function getFakeDataToPush($options = [])
     {
         return array_merge([
@@ -132,8 +141,27 @@ trait MockStripeObjectsTrait
             'created' => Null,
             'metadata' => $this->getFakeMetadataFromStripe(),
             'balance_transaction' => $this->getFakeBalanceTransactionFromStripe(),
+            'refunds' => [],
         ], $options));
     }
+
+    protected function getFakeRefundFromStripe($options = [])
+    {
+        return MockObject::mock('MockCharge', array_merge([
+            'id' => 're_' . $this->faker->numberBetween(11,99),
+            'amount' => $this->faker->numberBetween(100,12000),
+            'currency' => 'usd',
+            'created' => null,
+            'object' => 'refund',
+            'balance_transaction' => $this->getFakeBalanceTransactionFromStripe(),
+            'metadata' => $this->getFakeMetadataFromStripe(),
+            'charge' => 'ch_' . $this->faker->numberBetween(11,99),
+            'receipt_number' => null,
+            'description' => null,
+            'reason' => null,
+        ], $options));
+    }
+
 
     protected function getFakeBalanceTransactionFromStripe($options = [])
     {
