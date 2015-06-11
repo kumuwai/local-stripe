@@ -29,6 +29,9 @@ abstract class StripeBaseModel extends Eloquent
         if ($result = parent::getAttribute($attribute))
             return $result;
 
+        if ( ! method_exists($this, 'metadata'))
+            return '';
+
         if ($metadata = $this->metadata()->where('key', $attribute)->first())
             return $metadata->value;
     }

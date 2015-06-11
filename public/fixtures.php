@@ -53,6 +53,16 @@ class TestSeeder extends Seeder
         $this->capsule->table('stripe_refunds')
             ->insert(['id'=>'re_2']);
 
+        $this->capsule->table('stripe_transfers')
+            ->insert(['id'=>'tr_1','destination_id'=>'ba_1']);
+        $this->capsule->table('stripe_transfers')
+            ->insert(['id'=>'tr_2']);
+
+        $this->capsule->table('stripe_transfer_charges')
+            ->insert(['transfer_id'=>'tr_1','charge_id'=>'ch_1','transaction_id'=>'tx_1']);
+        $this->capsule->table('stripe_transfer_charges')
+            ->insert(['transfer_id'=>'tr_2','charge_id'=>'ch_2']);
+
         $this->capsule->table('stripe_balance_transactions')
             ->insert(['id'=>'tr_1', 'charge_id'=>'ch_1']);
         $this->capsule->table('stripe_balance_transactions')

@@ -1,14 +1,9 @@
 <?php namespace Kumuwai\LocalStripe\Models;
 
-use Illuminate\Database\Eloquent\Model as Eloquent;
 
-
-class StripeCharge extends Eloquent
+class StripeCharge extends StripeBaseModel
 {
     protected $table = 'stripe_charges';
-    protected $guarded = [];
-    public $timestamps = false;
-
 
     public static function createFromStripe($stripe)
     {
@@ -35,8 +30,7 @@ class StripeCharge extends Eloquent
             'created_at' => $stripe->created,
         ]);
 
-        foreach($stripe->metadata->__toArray() as $key=>$value)
-            StripeMetadata::create(['stripe_id'=>$stripe->id, 'key'=>$key, 'value'=>$value]);
+        self::createMetadata($stripe);
 
         StripeCard::createFromStripe($stripe->source);
 
@@ -45,27 +39,62 @@ class StripeCharge extends Eloquent
 
     public function card()
     {
-        return $this->belongsTo('Kumuwai\LocalStripe\Models\StripeCard', 'card_id');
+        return $this->belongsTo(
+            self::MY_NAMESPACE . 'StripeCard', 
+            'card_id'
+        );
     }
 
     public function customer()
     {
-        return $this->belongsTo('Kumuwai\LocalStripe\Models\StripeCustomer', 'customer_id');
+        return $this->belongsTo(
+            self::MY_NAMESPACE . 'StripeCustomer', 
+            'customer_id'
+        );
     }
 
     public function balance()
     {
-        return $this->hasOne('Kumuwai\LocalStripe\Models\StripeBalanceTransaction', 'charge_id');
+        return $this->hasOne(
+            self::MY_NAMESPACE . 'StripeBalanceTransaction', 
+            'charge_id'
+        );
     }
 
     public function refunds()
     {
-        return $this->hasMany('Kumuwai\LocalStripe\Models\StripeRefund', 'charge_id');
+        return $this->hasMany(
+            self::MY_NAMESPACE . 'StripeRefund', 
+            'charge_id'
+        );
+    }
+
+    public function transfers()
+    {
+        return $this->belongsToMany(
+            self::MY_NAMESPACE . 'StripeTransfer',
+            'stripe_transfer_charges',
+            'charge_id',
+            'transfer_id'
+        )->withPivot([
+            'transfer_id',
+            'charge_id',
+            'transaction_id',
+            'amount',
+            'currency',
+            'net',
+            'fee',
+            'available_at',
+            'created_at',
+        ]);
     }
 
     public function metadata()
     {
-        return $this->hasMany('Kumuwai\LocalStripe\Models\StripeMetadata', 'stripe_id');
+        return $this->hasMany(
+            self::MY_NAMESPACE . 'StripeMetadata', 
+            'stripe_id'
+        );
     }
 
 }

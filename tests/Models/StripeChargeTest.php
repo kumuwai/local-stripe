@@ -37,6 +37,16 @@ class StripeChargeTest extends TestCase
         $this->assertNotNull($test->refunds);
     }
 
+    public function testHasTransferData()
+    {
+        $test = $this->test->find('ch_1');
+        $this->assertNotNull($test->transfers);
+        $this->assertEquals('tr_1',$test->transfers[0]->id);
+        $this->assertEquals(
+            'tx_1',
+            $test->transfers[0]->pivot['transaction_id']);
+    }
+
     public function testHasCustomer()
     {
         $test = $this->test->find('ch_1');
@@ -84,7 +94,6 @@ class StripeChargeTest extends TestCase
         $this->assertNotNull($test->metadata);
         $this->assertEquals('bar', $test->metadata[0]->value);
     }
-
 
 }
 
