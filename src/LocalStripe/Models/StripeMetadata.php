@@ -6,7 +6,7 @@ class StripeMetadata extends StripeBaseModel
     protected $table = 'stripe_metadata';
 
 
-    public static function create(array $attributes)
+    public static function create(array $attributes = [])
     {
         $params = array_merge($attributes,['id'=>'meta_'.uniqid()]);
 
