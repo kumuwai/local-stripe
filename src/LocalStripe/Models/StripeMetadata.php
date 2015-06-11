@@ -1,13 +1,9 @@
 <?php namespace Kumuwai\LocalStripe\Models;
 
-use Illuminate\Database\Eloquent\Model as Eloquent;
 
-
-class StripeMetadata extends Eloquent
+class StripeMetadata extends StripeBaseModel
 {
     protected $table = 'stripe_metadata';
-    protected $guarded = [];
-    public $timestamps = false;
 
 
     public static function create(array $attributes)
@@ -17,20 +13,28 @@ class StripeMetadata extends Eloquent
         return parent::create($params);
     }
 
-
     public function customer()
     {
-        return $this->belongsTo('Kumuwai\LocalStripe\Models\StripeCustomer', 'stripe_id');
+        return $this->belongsTo(
+            self::MY_NAMESPACE.'StripeCustomer', 
+            'stripe_id'
+        );
     }
 
     public function card()
     {
-        return $this->belongsTo('Kumuwai\LocalStripe\Models\StripeCard', 'stripe_id');
+        return $this->belongsTo(
+            self::MY_NAMESPACE.'StripeCard', 
+            'stripe_id'
+        );
     }
 
     public function charge()
     {
-        return $this->belongsTo('Kumuwai\LocalStripe\Models\StripeCharge', 'stripe_id');
+        return $this->belongsTo(
+            self::MY_NAMESPACE.'StripeCharge', 
+            'stripe_id'
+        );
     }
 
 }

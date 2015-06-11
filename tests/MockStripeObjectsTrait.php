@@ -100,6 +100,7 @@ trait MockStripeObjectsTrait
             'cvc_check' => 'true',
             'customer' => 'cust_' .$this->faker->numberBetween(11,99),
             'name' => $this->faker->optional(0.3)->name,
+            'metadata' => $this->getFakeMetadataFromStripe(),
         ], $options));
     }
 
