@@ -13,6 +13,8 @@ abstract class StripeBaseModel extends Eloquent
 
     protected static function createMetadata($stripe)
     {
+        if ( ! $stripe->metadata) return;
+        
         foreach($stripe->metadata->__toArray() as $key=>$value)
             StripeMetadata::create([
                 'stripe_id'=>$stripe->id, 

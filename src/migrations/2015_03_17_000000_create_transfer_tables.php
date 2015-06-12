@@ -36,7 +36,7 @@ class CreateTransferTables extends BaseMigration
             $table->integer('amount')->nullable();
             $table->string('currency', 3)->nullable();
             $table->string('status', 8)->nullable();
-            $table->timestamp('desposited_at')->nullable();
+            $table->timestamp('deposited_at')->nullable();
             $table->timestamp('created_at')->nullable();
         });
     }
@@ -44,6 +44,7 @@ class CreateTransferTables extends BaseMigration
     private function createStripeTransferCharges()
     {
         $this->schema->create('stripe_transfer_charges', function(Blueprint $table) {
+            $table->string('id', 64)->primaryKey();
             $table->string('transfer_id', 32)->index();
             $table->string('charge_id', 32)->index();
             $table->string('transaction_id', 32)->index()->nullable();

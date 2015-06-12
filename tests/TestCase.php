@@ -12,6 +12,16 @@ class TestCase extends PHPUnit_Framework_TestCase
     protected $test;
     protected $faker;
 
+    private $objects = [
+        'balance_transaction',
+        'card',
+        'charge',
+        'customer',
+        'metadata',
+        'transfer',
+        'transfer_charge',
+    ];
+
     public function __construct($name = NULL, array $data = array(), $dataName = '') 
     {
         parent::__construct($name, $data, $dataName);
@@ -34,7 +44,7 @@ class TestCase extends PHPUnit_Framework_TestCase
     {
         $this->connector = MockObject::mock('Kumuwai\LocalStripe\Connector');
         foreach(['local'=>'local_','remote'=>'stripe_'] as $type=>$prefix) {
-            foreach(['customer','card','charge','metadata','balance_transaction'] as $model) {
+            foreach($this->objects as $model) {
                 $name = $prefix.$model;
                 $this->$name = MockObject::mock($name.'_mock');
                 $this->connector->shouldReceive($type)->byDefault()

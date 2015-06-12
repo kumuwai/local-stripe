@@ -59,9 +59,9 @@ class TestSeeder extends Seeder
             ->insert(['id'=>'tr_2']);
 
         $this->capsule->table('stripe_transfer_charges')
-            ->insert(['transfer_id'=>'tr_1','charge_id'=>'ch_1','transaction_id'=>'tx_1']);
+            ->insert(['id'=>'tr_1ch_1','transfer_id'=>'tr_1','charge_id'=>'ch_1','transaction_id'=>'tx_1']);
         $this->capsule->table('stripe_transfer_charges')
-            ->insert(['transfer_id'=>'tr_2','charge_id'=>'ch_2']);
+            ->insert(['id'=>'tr_2ch_2','transfer_id'=>'tr_2','charge_id'=>'ch_2']);
 
         $this->capsule->table('stripe_balance_transactions')
             ->insert(['id'=>'tr_1', 'charge_id'=>'ch_1']);

@@ -31,6 +31,17 @@ class Fetcher
         return $this->fetchStripeRecords('charge', $params);
     }
 
+    public function fetchTransferRecords(array $params = [])
+    {
+        return $this->fetchStripeRecords('transfer', $params);
+    }
+
+    // TODO: Test
+    public function fetchTransferChargeRecords(array $params = [])
+    {
+        return $this->fetchStripeRecords('transfer_charge', $params);
+    }
+
     private function fetchStripeRecords($type, array $params, Closure $closure = Null)
     {
         $records = new Collection;
@@ -54,6 +65,11 @@ class Fetcher
         return $this->writeRecordsToLocalDatabase('charge', $params);
     }
 
+    public function loadTransferRecords(array $params = [])
+    {
+        return $this->writeRecordsToLocalDatabase('transfer', $params);
+    }
+
     private function writeRecordsToLocalDatabase($type, array $params = [])
     {
         $return = [];
@@ -64,7 +80,7 @@ class Fetcher
                 $return[] = $this->$method($record);
         });
         return $return;
-    }    
+    }
 
     private function writeCustomerData($customer)
     {
@@ -92,7 +108,29 @@ class Fetcher
     {
         $refund = $this->connector->remote('balance_transaction')->retrieve($charge->balance_transaction);
         $this->connector->local('balance_transaction')->createFromStripe($transaction);            
+    }
 
+    private function writeTransferData($transfer)
+    {
+        $transfer = $this->connector->local('transfer')
+            ->createFromStripe($transfer);
+
+        $this->loadTransferChargeData($transfer);
+
+        return $transfer;
+    }
+
+    private function loadTransferChargeData($transfer)
+    {
+        $charges = $this->fetchStripeRecords('balance_transaction',[
+            'transfer' => $transfer->id,
+            'limit' => 1000,
+        ]);
+
+        foreach($charges as $charge) {
+            $this->connector->local('transfer_charge')
+                ->createFromStripe($charge, $transfer->id);
+        }
     }
 
 }

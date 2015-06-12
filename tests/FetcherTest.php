@@ -52,7 +52,6 @@ class FetcherTest extends TestCase
         $this->assertCount(3, $result);
     }
 
-
     public function testShouldLoadChargeRecords()
     {
         $this->setupMockConnector();
@@ -69,6 +68,48 @@ class FetcherTest extends TestCase
         $this->assertNotNull($result);
         $this->assertCount(3, $result);        
     }
+
+    public function testShouldFetchTransferRecords()
+    {
+        $this->setupMockConnector();
+        $c1 = $this->setupMockStripeCollection('Transfer', true, [['id'=>'tr_1'],['id'=>'tr_2']]);
+        $c2 = $this->setupMockStripeCollection('Transfer', false, [['id'=>'tr_3']]);
+        $this->stripe_transfer->shouldReceive('all')->times(2)->andReturn($c1,$c2);
+
+        $test = new Fetcher($this->connector);
+        $result = $test->fetchTransferRecords();
+
+        $this->assertNotNull($result);
+        $this->assertCount(3, $result);
+
+    }
+
+    public function testShouldLoadTransferRecords()
+    {
+        $this->setupMockConnector();
+        $c1 = $this->setupMockStripeCollection('Transfer', true, 
+            [['id'=>'trx_1'],['id'=>'trx_2']]);
+        $c2 = $this->setupMockStripeCollection('Transfer', false, 
+            [['id'=>'trx_3']]);
+        $this->stripe_transfer->shouldReceive('all')
+            ->times(2)->andReturn($c1,$c2);
+        $this->stripe_balance_transaction->shouldReceive('all')
+            ->times(3)->andReturn(
+                $this->setupMockStripeCollection('BalanceTransaction', false, [['id'=>'trx_1']])
+            );
+        $this->local_transfer->shouldReceive('createFromStripe')
+            ->times(3)->andReturn($this->getFakeTransferFromStripe());
+        $this->local_transfer_charge->shouldReceive('createFromStripe')
+            ->times(3)->andReturn('x');
+
+        $test = new Fetcher($this->connector);
+        $result = $test->loadTransferRecords();
+
+        $this->assertNotNull($result);
+        $this->assertCount(3, $result);
+    }
+
+
 
     public function testCanFetchAllDataFromStripe()
     {
@@ -94,5 +135,5 @@ class FetcherTest extends TestCase
     }
 
 
-
 }
+
