@@ -80,5 +80,18 @@ class StripeRefundTest extends TestCase
         $this->assertEquals('bar', $test->metadata[0]->value);
     }
 
+    public function testHasTransferData()
+    {
+        $test = $this->test->find('re_1');
+        $this->assertNotNull($test->transfers);
+        $this->assertCount(1, $test->transfers);
+        $this->assertEquals('tr_1',$test->transfers[0]->id);
+        $this->assertEquals(
+            'tx_1',
+            $test->transfers[0]->pivot['transaction_id']
+        );
+    }
+
+
 }
 

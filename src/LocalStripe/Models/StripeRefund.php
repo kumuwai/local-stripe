@@ -42,6 +42,11 @@ class StripeRefund extends StripeBaseModel
         );
     }
 
+    public function transfers()
+    {
+        return $this->charge->transfers();
+    }
+
     public function metadata()
     {
         return $this->hasMany(

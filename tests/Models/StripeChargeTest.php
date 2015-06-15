@@ -41,6 +41,7 @@ class StripeChargeTest extends TestCase
     {
         $test = $this->test->find('ch_1');
         $this->assertNotNull($test->transfers);
+        $this->assertCount(1, $test->transfers);
         $this->assertEquals('tr_1',$test->transfers[0]->id);
         $this->assertEquals(
             'tx_1',
