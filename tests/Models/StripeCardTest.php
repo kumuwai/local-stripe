@@ -64,5 +64,16 @@ class StripeCardTest extends TestCase
         $this->assertEquals('card_394', $test->id);
     }
 
+    public function testUseSoftDeletes()
+    {
+        $test = $this->test->where('id', 'card_1')->first();
+
+        $test->deleted_at = time();
+        $test->save();
+
+        $test2 = $this->test->where('id', 'card_1')->first();
+        $this->assertNull($test2);
+    }
+
 }
 

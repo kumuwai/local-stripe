@@ -1,8 +1,11 @@
 <?php namespace Kumuwai\LocalStripe\Models;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 
 class StripeCard extends StripeBaseModel
 {
+    use SoftDeletes;
 
     protected $table = 'stripe_cards';
 
