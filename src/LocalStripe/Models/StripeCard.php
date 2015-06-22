@@ -8,6 +8,7 @@ class StripeCard extends StripeBaseModel
     use SoftDeletes;
 
     protected $table = 'stripe_cards';
+    protected $dates = ['deleted_at'];
 
     public static function createFromStripe($stripe)
     {

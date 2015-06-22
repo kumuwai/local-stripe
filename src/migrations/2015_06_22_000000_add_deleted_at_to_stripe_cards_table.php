@@ -14,7 +14,7 @@ class AddDeletedAtToStripeCardsTable extends BaseMigration
     public function up()
     {
         $this->schema->table('stripe_cards', function(Blueprint $table){
-            $table->timestamp('deleted_at')->nullable();
+            $table->softDeletes();
         });
     }
 
