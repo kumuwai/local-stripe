@@ -11,16 +11,18 @@ abstract class BaseMigration extends Migration
     
     public function __construct()
     {
-        if ($this->isLaravelProject())
+        if ($this->isLaravelProject()) {
             $this->schema = app('db')->connection()->getSchemaBuilder();
-        else
+        } else {
             $this->schema = Capsule::schema();
+        }
     }
 
     private function isLaravelProject()
     {
-        return is_callable('app') 
-            && is_callable([app('db'), 'connection']) 
+        return is_callable('app')
+            && ( ! is_null(app()))
+            && is_callable([app('db'), 'connection'])
             && is_callable([app('db')->connection(), 'getSchemaBuilder']);
     }
 
