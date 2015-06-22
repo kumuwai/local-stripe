@@ -109,22 +109,29 @@ class FetcherTest extends TestCase
         $this->assertCount(3, $result);
     }
 
-
-
     public function testCanFetchAllDataFromStripe()
     {
         $this->setupMockConnector();
+
         $customers = $this->setupMockStripeCollection('Charge', false, [['id'=>'cust_1']]);
         $charges = $this->setupMockStripeCollection('Charge', false, [['id'=>'ch_1']]);
+        $transfers = $this->setupMockStripeCollection('Transfer', false, [['id'=>'tr_1']]);
+        $transactions = $this->setupMockStripeCollection('BalanceTransaction', false, [['id'=>'txn_1']]);
 
         $this->stripe_customer->shouldReceive('all')->times(1)->andReturn($customers);
         $this->stripe_charge->shouldReceive('all')->times(1)->andReturn($charges);
+        $this->stripe_transfer->shouldReceive('all')->times(1)->andReturn($transfers);
+
+        $this->stripe_balance_transaction->shouldReceive('all')->andReturn($transactions);
         $this->stripe_balance_transaction->shouldReceive('retrieve')->andReturn('x');
+
         $this->local_customer->shouldReceive('createFromStripe')->andReturn('x');
         $this->local_metadata->shouldReceive('createFromStripe')->andReturn('x');
         $this->local_card->shouldReceive('createFromStripe')->andReturn('x');
         $this->local_charge->shouldReceive('createFromStripe')->andReturn('x');
         $this->local_balance_transaction->shouldReceive('createFromStripe')->andReturn('x');
+        $this->local_transfer->shouldReceive('createFromStripe')->andReturn($this->getFakeTransferFromStripe());
+        $this->local_transfer_charge->shouldReceive('createFromStripe')->andReturn('x');
 
         $test = new Fetcher($this->connector);
         $result = $test->fetch();
@@ -132,6 +139,7 @@ class FetcherTest extends TestCase
         $this->assertNotNull($result);
         $this->assertNotNull($result['customers'][0]);
         $this->assertNotNull($result['charges'][0]);
+        $this->assertNotNull($result['transfers'][0]);
     }
 
 

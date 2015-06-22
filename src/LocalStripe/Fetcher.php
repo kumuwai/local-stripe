@@ -17,8 +17,9 @@ class Fetcher
     {
         $customers = $this->loadCustomerRecords($params);
         $charges = $this->loadChargeRecords($params);
+        $transfers = $this->loadTransferRecords($params);
 
-        return new Collection(compact('customers','charges'));
+        return new Collection(compact('customers','charges','transfers'));
     }
 
     public function fetchCustomerRecords(array $params = [])
@@ -47,7 +48,9 @@ class Fetcher
         $records = new Collection;
         do {
             $new = $this->connector->remote($type)->all($params);
-            if ($closure) $closure($new);
+            if ($closure) {
+                $closure($new);
+            }
             $records = $records->merge($new->data);
             $params['starting_after'] = $records->last() ? $records->last()->id : null;
         } while( $new->has_more );
