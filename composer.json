@@ -22,7 +22,7 @@
         "satooshi/php-coveralls": "dev-master"
     },
     "suggest": {
-        "illuminate/support": "Required to use facade",
+        "illuminate/support": "Required to use facade"
     },
     "repositories": [
         {
