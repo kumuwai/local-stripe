@@ -1,6 +1,6 @@
 <?php namespace Kumuwai\LocalStripe\Models;
 
-use Illuminate\Database\Eloquent\SoftDeletingTrait as SoftDeletes;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 
 class StripeCard extends StripeBaseModel
