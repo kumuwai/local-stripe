@@ -30,7 +30,16 @@ trait MockStripeObjectsTrait
     protected function getFakeChargeToStripe($options = [])
     {
         return array_merge([
-            'amount' => $this->faker->numberBetween(100,12000),
+            'amount' => $this->getFakeAmount(),
+            'currency' => 'usd',
+            'metadata' => ['url'=>$this->faker->url],
+        ], $options);
+    }
+
+    protected function getFakeRefundToStripe($options = [])
+    {
+        return array_merge([
+            'amount' => $this->getFakeAmount(),
             'currency' => 'usd',
             'metadata' => ['url'=>$this->faker->url],
         ], $options);
@@ -48,7 +57,7 @@ trait MockStripeObjectsTrait
             'address_city' => $this->faker->optional(0.3)->city,
             'address_state' => $this->faker->optional(0.3)->state,
             'address_zip' => $this->faker->optional(0.3)->postcode,            
-            'amount' => $this->faker->numberBetween(100, 20000),
+            'amount' => $this->getFakeAmount(),
             'currency' => 'usd',
             'charge.description' => 'charge #' . $this->faker->numberBetween(11,99),
             'charge.statement_descriptor' => 'Company charge #' . $this->faker->numberBetween(11,99),
@@ -58,15 +67,20 @@ trait MockStripeObjectsTrait
     protected function getFakeCustomerFromStripe($options=[])
     {
         return MockObject::mock('MockCustomer',array_merge([
-            'id' => 'cust_' . $this->faker->numberBetween(11,99),
-            'email' => $this->faker->optional(0.3)->email,
+            'object' => 'customer',
+            'created' => $this->getFakeDate(),
+            'id' => $this->getFakeId('cust'),
+            'livemode' => false,
             'description' => $this->faker->optional(0.3)->sentence,
-            'livemode' => 'false',
-            'default_source' => 'ch_' . $this->faker->numberBetween(11,99),
+            'email' => $this->faker->optional(0.3)->email,
+            'delinquent' => false,
             'metadata' => $this->getFakeMetadataFromStripe(['name'=>$this->faker->name]),
+            'subscriptions' => MockObject::mock('MockSubscription',[]),
+            'discount' => null,
+            'account_balance' => 0,
+            'currency' => null,
             'sources' => $this->getFakeSourcesFromStripe(),
-            'charges' => [$this->getFakeChargeFromStripe()],
-            'created' => $this->faker->datetime,
+            'default_source' => $this->getFakeId('ch'),
         ], $options));
     }
 
@@ -80,72 +94,146 @@ trait MockStripeObjectsTrait
     protected function getFakeCardFromStripe($options = [])
     {
         return MockObject::mock('MockCard', array_merge($this->getFakeCardData(), [
-            'id' => 'card_' . $this->faker->numberBetween(11,99),
+            'id' => $this->getFakeId('card'),
+            'object' => 'card',
+            'last4' => $this->faker->numberBetween(0000,9999),
             'brand' => $this->faker->randomElement(['Visa', 'American Express', 'MasterCard', 
                 'Discover', 'JCB', 'Diners Club', 'Unknown']),
-            'last4' => $this->faker->numberBetween(0000,9999),
-            'fingerprint' => $this->faker->md5,
             'funding' => 'credit',
-            'address_line1_check' => 'true',
-            'address_zip_check' => 'true',
-            'cvc_check' => 'true',
-            'customer' => 'cust_' .$this->faker->numberBetween(11,99),
+            'fingerprint' => $this->faker->md5,            
             'name' => $this->faker->optional(0.3)->name,
+            'cvc_check' => 'pass',
+            'address_line1_check' => null,
+            'address_zip_check' => null,
+            'dynamic_last4' => null,
+            'metadata' => $this->getFakeMetadataFromStripe(),
+            'customer' => $this->getFakeId('cust'),
         ], $options));
     }
 
     protected function getFakeCardData($options = [])
     {
         return array_merge([
-            'object' => 'card',
             'exp_month' => $this->faker->numberBetween(1,12),
             'exp_year' => $this->faker->numberBetween(1,5) + date('Y'),
+            'country' => '',
             'address_line1' => $this->faker->optional(0.3)->streetAddress,
+            'address_line2' => $this->faker->optional(0.1)->secondaryAddress,
             'address_city' => $this->faker->optional(0.3)->city,
             'address_state' => $this->faker->optional(0.3)->state,
             'address_zip' => $this->faker->optional(0.3)->postcode,
-            'address_city' => '',
             'address_country' => '',
-            'address_line2' => '',
-            'country' => '',
         ], $options);
     }
 
     protected function getFakeChargeFromStripe($options = [])
     {
         return MockObject::mock('MockCharge', array_merge([
-            'id' => 'ch_' . $this->faker->numberBetween(11,99),
-            'source' => $this->getFakeCardFromStripe(),
-            'amount' => $this->faker->numberBetween(100,12000),
+            'id' => $this->getFakeId('ch'),
+            'object' => 'charge',
+            'created' => $this->getFakeDate(),
+            'livemode' => false,
+            'paid' => false,
+            'status' => 'succeeded',
+            'amount' => $this->getFakeAmount(),
             'currency' => 'usd',
-            'livemode' => 'false',
-            'captured' => 'false',
-            'paid' => 'false',
-            'refunded' => 'false',
-            'status' => Null,
-            'amount_refunded' => Null,
-            'description' => Null,
-            'failure_code' => Null,
+            'refunded' => false,
+            'source' => $this->getFakeCardFromStripe(),
+            'captured' => true,
+            'balance_transaction' => $this->getFakeId('txn'),
             'failure_message' => Null,
+            'failure_code' => Null,
+            'amount_refunded' => 0,
+            'customer' => $this->getFakeId('cus'),
+            'invoice' => Null,
+            'description' => Null,
+            'dispute' => Null,
+            'metadata' => $this->getFakeMetadataFromStripe(),
+            'statement_descriptor' => Null,
+            'fraud_details' => [],
             'receipt_email' => Null,
             'receipt_number' => Null,
-            'created' => Null,
+            'authorization_code' => uniqid(),
+            'shipping' => Null,
+            'destination' => Null,
+            'application_fee' => Null,
+            'refunds' => [],
+        ], $options));
+    }
+
+    protected function getFakeRefundFromStripe($options = [])
+    {
+        return MockObject::mock('MockCharge', array_merge([
+            'id' => $this->getFakeId('re'),
+            'amount' => $this->getFakeAmount(),
+            'currency' => 'usd',
+            'created' => $this->getFakeDate(),
+            'object' => 'refund',
+            'balance_transaction' => $this->getFakeId('txn'),
             'metadata' => $this->getFakeMetadataFromStripe(),
-            'balance_transaction' => $this->getFakeBalanceTransactionFromStripe(),
+            'charge' => $this->getFakeId('ch'),
+            'receipt_number' => null,
+            'description' => null,
+            'reason' => null,
         ], $options));
     }
 
     protected function getFakeBalanceTransactionFromStripe($options = [])
     {
         return MockObject::mock('MockBalanceTransaction', array_merge([
-            'id' => 'tx_'.$this->faker->numberBetween(11,99),
-            'amount' => $this->faker->numberBetween(100,9900),
+            'id' => $this->getFakeId('txn'),
+            'object' => 'balance_transaction',
+            'amount' => $this->getFakeAmount(),
             'currency' => 'usd',
-            'net' => $this->faker->numberBetween(100,9900),
-            'fee' => $this->faker->numberBetween(10,990),
-            'source' => 'ch_'.$this->faker->numberBetween(11,99),
-            'created' => $this->faker->datetime(),
+            'net' => $this->getFakeAmount(),
+            'type' => 'charge',
+            'created' => $this->getFakeDate(),
+            'status' => 'pending',
+            'fee' => $this->getFakeAmount(),
+            'fee_details' => [],  // TODO: Flesh this out
+            'source' => $this->getFakeId('ch'),
+            'description' => null,
+            'sourced_transfers' => [], // TODO: flesh this out
         ], $options));
+    }
+
+    protected function getFakeTransferFromStripe($options = [])
+    {
+        return MockObject::mock('MockTransfer', array_merge([
+            'id' => $this->getFakeId('tr'),
+            'object' => 'transfer',
+            'created' => $this->getFakeDate(),
+            'date' => $this->getFakeDate('-2 days','+4 days'),
+            'livemode' => false,
+            'amount' => $this->getFakeAmount(),
+            'currency' => 'usd',
+            'reversed' => false,
+            'status' => 'paid',
+            'type' => 'bank_account',
+            'reversals' => [],
+            'balance_transaction' => $this->getFakeId('txn'),
+            'bank_account' => [],  // TODO: flesh this out
+            'destination' => $this->getFakeId('ba'), 
+            'description' => null, 
+            'failure_message' => null,
+            'failure_code' => null,
+            'amount_reversed' => 0,
+            'metadata' => [],
+            'statement_descriptor' => null,
+            'recipient' => null,
+            'source_transaction' => null,
+            'application_fee' => null,
+        ], $options));
+    }
+
+    protected function getFakeTransferBalanceTransactionFromStripe($options = [])
+    {
+        return $this->getFakeBalanceTransactionFromStripe(
+            array_merge([
+                'available_on' => $this->getFakeDate(),
+                'transfer' => $this->getFakeId('tr'),
+            ], $options)
+        );
     }
 
     protected function getFakeMetadataFromStripe($options = [])
@@ -157,6 +245,23 @@ trait MockStripeObjectsTrait
     {
         return MockObject::mock('MockEmptyModel', $options);
     }
+
+    protected function getFakeAmount($min=100,$max=12000)
+    {
+        return $this->faker->numberBetween($min,$max);
+    }
+
+    protected function getFakeDate($start = '-6 days', $end = 'now')
+    {
+        return $this->faker->dateTimeBetween($start, $end)
+            ->getTimestamp();
+    }
+
+    protected function getFakeId($type,$start=11,$end=99)
+    {
+        return $type.'_'.$this->faker->numberBetween($start,$end);
+    }
+
 
     protected function setupMockStripeCollection($type, $has_more, $items)
     {

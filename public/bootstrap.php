@@ -29,7 +29,6 @@ $capsule->addConnection([
     'database'  => ':memory:',
 ]);
 
-$capsule->setEventDispatcher(new Dispatcher(new Container));
 $capsule->bootEloquent();
 $capsule->setAsGlobal();
 

@@ -30,11 +30,17 @@ class LocalStripe
         return $this->fetcher->fetch($params);
     }
 
+    /**
+     * Create a customer record. Do not charge at this time
+     */
     public function create(array $params = [])
     {
         return $this->pusher->createCustomer($params);
     }
 
+    /**
+     * Create and charge a customer record.
+     */
     public function chargeCustomer(array $params = [])
     {
         $customer = $this->pusher->createCustomer($params);

@@ -3,12 +3,12 @@
 use Kumuwai\LocalStripe\TestCase;
 
 
-class StripeChargeTest extends TestCase
+class StripeRefundTest extends TestCase
 {
 
     public function setUp()
     {
-        $this->test = new StripeCharge;
+        $this->test = new StripeRefund;
         $this->test->getConnection()->beginTransaction();
     }
 
@@ -18,74 +18,58 @@ class StripeChargeTest extends TestCase
     }
 
     public function testClassExists() {}
-    
-    public function testHasCard()
-    {
-        $test = $this->test->find('ch_1');
-        $this->assertNotNull($test->card);
-    }
 
+    public function testCanFindRecord() 
+    {
+        $test = $this->test->find('re_1');
+        $this->assertNotNull($test);
+    }
+    
     public function testHasBalance()
     {
-        $test = $this->test->find('ch_1');
+        $test = $this->test->find('re_1');
         $this->assertNotNull($test->balance);
     }
 
-    public function testHasRefunds()
+    public function testHasCharge()
     {
-        $test = $this->test->find('ch_1');
-        $this->assertNotNull($test->refunds);
-    }
-
-    public function testHasTransferData()
-    {
-        $test = $this->test->find('ch_1');
-        $this->assertNotNull($test->transfers);
-        $this->assertCount(1, $test->transfers);
-        $this->assertEquals('tr_1',$test->transfers[0]->id);
-        $this->assertEquals(
-            'tx_1',
-            $test->transfers[0]->pivot['transaction_id']);
-    }
-
-    public function testHasCustomer()
-    {
-        $test = $this->test->find('ch_1');
-        $this->assertNotNull($test->customer);
+        $test = $this->test->find('re_1');
+        $this->assertNotNull($test->charge);
+        $this->assertEquals('ch_1', $test->charge->id);
     }
 
     public function testHasMetadata()
     {
-        $test = $this->test->find('ch_1');
+        $test = $this->test->find('re_1');
         $this->assertNotNull($test->metadata);
         $this->assertTrue(count($test->metadata)>0);
     }
 
     public function testReturnObjectIfWantedDuplicateCreated()
     {
-        $c1 = $this->getFakeChargeFromStripe(['id'=>'ch_1']);
+        $c1 = $this->getFakeRefundFromStripe(['id'=>'re_1']);
 
         $test = $this->test->createFromStripe($c1);
 
         $this->assertNotNull($test);
-        $this->assertEquals('ch_1', $test->id);
+        $this->assertEquals('re_1', $test->id);
     }
 
     public function testCanCreateFromStripeObject()
     {
-        $c1 = $this->getFakeChargeFromStripe([
-            'id'=>'ch_14',
+        $c1 = $this->getFakeRefundFromStripe([
+            'id'=>'re_14',
         ]);
 
         $test = $this->test->createFromStripe($c1);
 
         $this->assertNotNull($test);
-        $this->assertEquals('ch_14', $test->id);
+        $this->assertEquals('re_14', $test->id);
     }
 
     public function testCanCreateMetadata()
     {
-        $c1 = $this->getFakeChargeFromStripe([
+        $c1 = $this->getFakeRefundFromStripe([
             'id'=>'ch_14',
             'metadata'=> $this->getFakeMetadataFromStripe(['foo'=>'bar']),
         ]);
@@ -95,6 +79,19 @@ class StripeChargeTest extends TestCase
         $this->assertNotNull($test->metadata);
         $this->assertEquals('bar', $test->metadata[0]->value);
     }
+
+    public function testHasTransferData()
+    {
+        $test = $this->test->find('re_1');
+        $this->assertNotNull($test->transfers);
+        $this->assertCount(1, $test->transfers);
+        $this->assertEquals('tr_1',$test->transfers[0]->id);
+        $this->assertEquals(
+            'tx_1',
+            $test->transfers[0]->pivot['transaction_id']
+        );
+    }
+
 
 }
 

@@ -48,10 +48,27 @@ class TestSeeder extends Seeder
         $this->capsule->table('stripe_charges')
             ->insert(['id'=>'ch_2']);
 
+        $this->capsule->table('stripe_refunds')
+            ->insert(['id'=>'re_1','charge_id'=>'ch_1','transaction_id'=>'tr_1']);
+        $this->capsule->table('stripe_refunds')
+            ->insert(['id'=>'re_2']);
+
+        $this->capsule->table('stripe_transfers')
+            ->insert(['id'=>'tr_1','destination_id'=>'ba_1']);
+        $this->capsule->table('stripe_transfers')
+            ->insert(['id'=>'tr_2']);
+
+        $this->capsule->table('stripe_transfer_charges')
+            ->insert(['id'=>'tr_1ch_1','transfer_id'=>'tr_1','charge_id'=>'ch_1','transaction_id'=>'tx_1']);
+        $this->capsule->table('stripe_transfer_charges')
+            ->insert(['id'=>'tr_2ch_2','transfer_id'=>'tr_2','charge_id'=>'ch_2']);
+
         $this->capsule->table('stripe_balance_transactions')
             ->insert(['id'=>'tr_1', 'charge_id'=>'ch_1']);
         $this->capsule->table('stripe_balance_transactions')
             ->insert(['id'=>'tr_2']);
+        $this->capsule->table('stripe_balance_transactions')
+            ->insert(['id'=>'tr_3', 'charge_id'=>'re_1']);
 
         $this->capsule->table('stripe_metadata')
             ->insert(['id'=>'meta_1','stripe_id'=>'cust_1','key'=>'key1','value'=>'val1']);
@@ -59,6 +76,8 @@ class TestSeeder extends Seeder
             ->insert(['id'=>'meta_3','stripe_id'=>'card_1','key'=>'key1','value'=>'val1']);
         $this->capsule->table('stripe_metadata')
             ->insert(['id'=>'meta_4','stripe_id'=>'ch_1','key'=>'key1','value'=>'val1']);
+        $this->capsule->table('stripe_metadata')
+            ->insert(['id'=>'meta_4','stripe_id'=>'re_1','key'=>'key1','value'=>'val1']);
     }
 
 }

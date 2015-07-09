@@ -27,9 +27,12 @@
         <exclude>
           <directory suffix=".php">./src/migrations/</directory>
           <directory suffix=".php">./src/config/</directory>
-          <directory suffix=".php">./src/Laravel/</directory>
+          <directory suffix=".php">./src/LocalStripe/Laravel/</directory>
         </exclude>
       </whitelist>
+      <blacklist>
+        <directory>./vendor</directory>
+      </blacklist>
     </filter>
 
 </phpunit>

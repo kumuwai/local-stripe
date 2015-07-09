@@ -1,14 +1,14 @@
 <?php namespace Kumuwai\LocalStripe\Models;
 
-use Illuminate\Database\Eloquent\Model as Eloquent;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 
-class StripeCard extends Eloquent
+class StripeCard extends StripeBaseModel
 {
+    use SoftDeletes;
 
     protected $table = 'stripe_cards';
-    protected $guarded = [];
-    public $timestamps = false;
+    protected $dates = ['deleted_at'];
 
     public static function createFromStripe($stripe)
     {
@@ -30,6 +30,7 @@ class StripeCard extends Eloquent
             'name' => $stripe->name,
         ]);
 
+        self::createMetadata($stripe);
         StripeAddress::createFromStripe($stripe);
 
         return self::findOrFail($stripe->id);
@@ -37,22 +38,34 @@ class StripeCard extends Eloquent
 
     public function customer()
     {
-        return $this->belongsTo('Kumuwai\LocalStripe\Models\StripeCustomer','customer_id');
+        return $this->belongsTo(
+            self::MY_NAMESPACE.'StripeCustomer',
+            'customer_id'
+        );
     }
 
     public function address()
     {
-        return $this->hasMany('Kumuwai\LocalStripe\Models\StripeAddress','stripe_id');
+        return $this->hasOne(
+            self::MY_NAMESPACE.'StripeAddress',
+            'stripe_id'
+        );
     }
 
     public function charges()
     {
-        return $this->hasMany('Kumuwai\LocalStripe\Models\StripeCharge','card_id');
+        return $this->hasMany(
+            self::MY_NAMESPACE.'StripeCharge',
+            'card_id'
+        );
     }
 
     public function metadata()
     {
-        return $this->hasMany('Kumuwai\LocalStripe\Models\StripeMetadata','stripe_id');
+        return $this->hasMany(
+            self::MY_NAMESPACE.'StripeMetadata',
+            'stripe_id'
+        );
     }
 
 }

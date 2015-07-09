@@ -35,6 +35,7 @@ class StripeCardTest extends TestCase
     {
         $test = $this->test->find('card_1');
         $this->assertNotNull($test->address);
+        $this->assertEquals('addr_1', $test->address->id);
     }
 
     public function testHasMetadata()
@@ -61,6 +62,17 @@ class StripeCardTest extends TestCase
 
         $this->assertNotNull($test);
         $this->assertEquals('card_394', $test->id);
+    }
+
+    public function testUseSoftDeletes()
+    {
+        $test = $this->test->where('id', 'card_1')->first();
+
+        $test->deleted_at = time();
+        $test->save();
+
+        $test2 = $this->test->where('id', 'card_1')->first();
+        $this->assertNull($test2);
     }
 
 }

@@ -1,13 +1,9 @@
 <?php namespace Kumuwai\LocalStripe\Models;
 
-use Illuminate\Database\Eloquent\Model as Eloquent;
 
-
-class StripeBalanceTransaction extends Eloquent
+class StripeBalanceTransaction extends StripeBaseModel
 {
     protected $table = 'stripe_balance_transactions';
-    protected $guarded = [];
-    public $timestamps = false;
 
     public static function createFromStripe($stripe)
     {
@@ -29,7 +25,18 @@ class StripeBalanceTransaction extends Eloquent
 
     public function charge()
     {
-        return $this->belongsTo('Kumuwai\LocalStripe\Models\StripeCharge', 'charge_id');
+        return $this->belongsTo(
+            self::MY_NAMESPACE.'StripeCharge', 
+            'charge_id'
+        );
+    }
+
+    public function refund()
+    {
+        return $this->belongsTo(
+            self::MY_NAMESPACE.'StripeRefund', 
+            'charge_id'
+        );
     }
 
 }

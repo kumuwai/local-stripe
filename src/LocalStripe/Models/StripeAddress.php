@@ -1,14 +1,10 @@
 <?php namespace Kumuwai\LocalStripe\Models;
 
-use Illuminate\Database\Eloquent\Model as Eloquent;
 
-
-class StripeAddress extends Eloquent
+class StripeAddress extends StripeBaseModel
 {
 
     protected $table = 'stripe_addresses';
-    protected $guarded = [];
-    public $timestamps = false;
 
     /**
      * Create an address from a Stripe Card record
@@ -45,7 +41,11 @@ class StripeAddress extends Eloquent
 
     public function card()
     {
-        return $this->belongsTo('Kumuwai\LocalStripe\Models\StripeCard', 'stripe_id', 'id');
+        return $this->belongsTo(
+            self::MY_NAMESPACE.'StripeCard', 
+            'stripe_id', 
+            'id'
+        );
     }
     
 }

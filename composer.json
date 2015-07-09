@@ -10,12 +10,9 @@
         }
     ],
     "require": {
-        "php": ">=5.4.0",
-        "stripe/stripe-php": "~2.1",
-        "illuminate/support": ">=4.1",
-        "illuminate/filesystem": ">=4.1",
-        "illuminate/events": ">=4.1",
-        "illuminate/database": ">=4.1"
+        "stripe/stripe-php": "2.x",
+        "illuminate/filesystem": "5.x",
+        "illuminate/database": "5.x"
     },
     "require-dev": {
         "mockery/mockery": "~0.9.3",
@@ -23,6 +20,9 @@
         "fzaninotto/faker": "1.5.*@dev",
         "kumuwai/mock-object": "dev-master",
         "satooshi/php-coveralls": "dev-master"
+    },
+    "suggest": {
+        "illuminate/support": "Required to use facade",
     },
     "repositories": [
         {
@@ -32,7 +32,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Kumuwai\\LocalStripe\\": "src/"
+            "Kumuwai\\LocalStripe\\": "src/LocalStripe"
         }
     }
 }
