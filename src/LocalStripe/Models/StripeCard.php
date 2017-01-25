@@ -15,6 +15,15 @@ class StripeCard extends StripeBaseModel
         if ($found = self::find($stripe->id))
             return $found;
 
+        $address_check = is_null($stripe->address_line1_check) 
+            ? null : ($stripe->address_line1_check == 'pass');
+
+        $zip_check = is_null($stripe->address_zip_check) 
+            ? null : ($stripe->address_zip_check == 'pass');
+
+        $cvc_check = is_null($stripe->cvc_check) 
+            ? null : ($stripe->cvc_check == 'pass');
+
         self::create([
             'id' => $stripe->id,
             'brand' => $stripe->brand,
@@ -23,9 +32,9 @@ class StripeCard extends StripeBaseModel
             'fingerprint' => $stripe->fingerprint,
             'funding' => $stripe->funding,
             'last4' => $stripe->last4,
-            'address_line1_check' => $stripe->address_line1_check,
-            'address_zip_check' => $stripe->address_zip_check,
-            'cvc_check' => $stripe->cvc_check,
+            'address_line1_check' => $address_check,
+            'address_zip_check' => $zip_check,
+            'cvc_check' => $cvc_check,
             'customer_id' => $stripe->customer,
             'name' => $stripe->name,
         ]);
