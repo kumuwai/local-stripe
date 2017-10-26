@@ -5,7 +5,7 @@ use Closure;
 
 
 class Fetcher
-{   
+{
     protected $connector;
 
     public function __construct(Connector $connector = Null)
@@ -80,7 +80,11 @@ class Fetcher
 
         $this->fetchStripeRecords($type, $params, function($records) use (&$return, $method) {
             foreach($records->data as $record)
-                $return[] = $this->$method($record);
+                try {
+                    $return[] = $this->$method($record);
+                } catch (\Exception $e) {
+                    \Log::error($e->getMessage());
+                }
         });
         return $return;
     }
@@ -103,14 +107,14 @@ class Fetcher
                 $this->connector->local('refund')->createFromStripe($refund);
             }
         }
-        
+
         return $this->connector->local('charge')->createFromStripe($charge);
     }
 
     private function writeRefundData($refund)
     {
         $refund = $this->connector->remote('balance_transaction')->retrieve($charge->balance_transaction);
-        $this->connector->local('balance_transaction')->createFromStripe($transaction);            
+        $this->connector->local('balance_transaction')->createFromStripe($transaction);
     }
 
     private function writeTransferData($transfer)
